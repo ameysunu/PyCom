@@ -1,17 +1,31 @@
-#!/usr/bin/env python
-#
-# Copyright (c) 2019, Pycom Limited.
-#
-# This software is licensed under the GNU GPL version 3 or any
-# later version, with permitted additional terms. For more information
-# see the Pycom Licence v1.0 document supplied with this file, or
-# available at https://www.pycom.io/opensource/licensing
-#
+from pycom import heartbeat
+heartbeat(False)
+print ("Heartbeat off")
+
+
+import utime
+from machine import RTC
+rtc = RTC()
+rtc.ntp_sync("pool.ntp.org")
+utime.sleep_ms(750)
+t = rtc.now()
+with open("bootlog.txt", "a") as f:
+   f.write(repr(utime.time()) + " " + repr(t) + "\n")
+
+def reload(mod):
+    import sys
+    mod_name = mod.__name__
+    del sys.modules[mod_name]
+    return __import__(mod_name)
+
+from machine import reset
+
+""" LoPy LoRaWAN Nano Gateway example usage """
 
 import config
 from nanogateway import NanoGateway
 
-if __name__ == '__main__':
+if True: #__name__ == '__main__':
     nanogw = NanoGateway(
         id=config.GATEWAY_ID,
         frequency=config.LORA_FREQUENCY,
@@ -25,5 +39,3 @@ if __name__ == '__main__':
         )
 
     nanogw.start()
-    nanogw._log('You may now press ENTER to enter the REPL')
-    input()
