@@ -1,7 +1,7 @@
 from network import LoRa
 import socket
-import time
 import ubinascii
+import struct
 
 # Initialise LoRa in LORAWAN mode.
 # Please pick the region that matches where you are using the device:
@@ -11,11 +11,10 @@ import ubinascii
 # United States = LoRa.US915
 lora = LoRa(mode=LoRa.LORAWAN, region=LoRa.EU868)
 
-# create an OTAA authentication parameters, change them to the provided credentials
-app_eui = ubinascii.unhexlify('0000000000000000')
-app_key = ubinascii.unhexlify('AE1DA75873A9B1C8AB6E7DC0E04570FB')
-#uncomment to use LoRaWAN application provided dev_eui
-dev_eui = ubinascii.unhexlify('70B3D5499B322307')
+# create an ABP authentication params
+dev_addr = ubinascii.unhexlify('260B011A')
+nwk_swkey = ubinascii.unhexlify('8ACE44F5B843DB431A36E79AA86CBA1D')
+app_swkey = ubinascii.unhexlify('27C3F721C0406842A0938645F9A2109F')
 
 # Uncomment for US915 / AU915 & Pygate
 # for i in range(0,8):
@@ -25,17 +24,10 @@ dev_eui = ubinascii.unhexlify('70B3D5499B322307')
 # for i in range(66,72):
 #     lora.remove_channel(i)
 
-# join a network using OTAA (Over the Air Activation)
-#uncomment below to use LoRaWAN application provided dev_eui
-lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
-#lora.join(activation=LoRa.OTAA, auth=(dev_eui, app_eui, app_key), timeout=0)
 
-# wait until the module has joined the network
-while not lora.has_joined():
-    time.sleep(2.5)
-    print('Not yet joined...')
+# join a network using ABP (Activation By Personalization)
+lora.join(activation=LoRa.ABP, auth=(dev_addr, nwk_swkey, app_swkey))
 
-print('Joined')
 # create a LoRa socket
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 
