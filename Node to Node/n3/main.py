@@ -25,12 +25,15 @@ s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setblocking(False)
 devEUI = ubinascii.hexlify(lora.mac()).upper().decode('utf-8')
 i = 0
-while True:
-    i = i+1
-    if devEUI == '70B3D54991C35D8D':
-        print(s.recv(64))
-    else:
-        print('Forwarded message successfully')
+sendMessage = True
+while sendMessage:
+    print('Sent message successfully')
+    s.send('Hi from Node 3. My ID is ' + devEUI + ' and my humidity is ' + humidity);
+
+    if s.recv(64) == b'Message Recieved':
+        print('Message Recieved')
+        sendMessage = False
+
     # if s.recv(64) == b'Ping':
     #     s.send('Pong')
     #     print('Pong {}'.format(i))

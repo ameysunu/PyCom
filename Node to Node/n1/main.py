@@ -27,14 +27,24 @@ nvs_obj = Nvs(',', 512) # Initialize the buffer to write to LoPy's flash
 
 
 devEUI = ubinascii.hexlify(lora.mac()).upper().decode('utf-8')
-while True:
+sendMessage = True
+
+while sendMessage:
     # s.send('Hi this is Node 1. My temperature is ' + temp)
     # nvs_obj.store(s.recv(64).decode('utf-8'))
     buf = nvs_obj.read_all()
-    
-    print('Data read from file: {}'.format(buf))
-    if devEUI == '70B3D54997DB6CCE':
+
+    print('Data saved to LoPy: {}'.format(buf))
+    i = i+1
+    if devEUI == '70B3D54991C35D8D':
         print(s.recv(64))
+        s.send('Message Recieved')
+
+        if s.recv(64) == b'':
+            print('Data recieved is empty')
+        else:
+            sendMessage = False
+
     else:
         s.send(s.recv(64))
     i= i+1
