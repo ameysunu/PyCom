@@ -34,15 +34,12 @@ while sendMessage:
     # nvs_obj.store(s.recv(64).decode('utf-8'))
     buf = nvs_obj.read_all()
 
-    print('Data saved to LoPy: {}'.format(buf))
-    i = i+1
     if devEUI == '70B3D54991C35D8D':
         print(s.recv(64))
+        print('Data saved to LoPy: {}'.format(buf))
         s.send('Message Recieved')
 
-        if s.recv(64) == b'':
-            print('Data recieved is empty')
-        else:
+        if s.recv(64) == b'Acknowledged':
             sendMessage = False
 
     else:

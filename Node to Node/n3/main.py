@@ -28,10 +28,11 @@ i = 0
 sendMessage = True
 while sendMessage:
     print('Sent message successfully')
-    s.send('Hi from Node 3. My ID is ' + devEUI + ' and my humidity is ' + humidity);
+    s.send('Hi from ' + devEUI + '. Humidity is '+ humidity);
 
     if s.recv(64) == b'Message Recieved':
         print('Message Recieved')
+        s.send('Acknowledged')
         sendMessage = False
 
     # if s.recv(64) == b'Ping':
