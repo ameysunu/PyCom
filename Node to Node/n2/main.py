@@ -30,6 +30,7 @@ while True:
     if devEUI == '70B3D54991C35D8D':
         print(s.recv(64))
     else:
+        # check if data exists and then timeout closing the connection.
         print('Forwarded message successfully')
     # if s.recv(64) == b'Ping':
     #     s.send('Pong')
