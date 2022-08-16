@@ -17,6 +17,8 @@ from SI7006A20 import SI7006A20 # Temperature sensor
 py = Pysense()
 si = SI7006A20(py)
 
+start_time = time.time()
+
 # Please pick the region that matches where you are using the device
 
 temp = str(si.temperature())
@@ -38,10 +40,12 @@ while sendMessage:
 
     if devEUI == '70B3D54991C35D8D':
         print(s.recv(64))
+        # nvs_obj.store(s.recv(64).decode('utf-8'))
         print('Data saved to LoPy: {}'.format(buf))
         s.send('Message Recieved')
 
         if s.recv(64) == b'Acknowledged':
+            print("--- %s seconds ---" % (time.time() - start_time))
             sendMessage = False
 
     else:

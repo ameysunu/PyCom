@@ -28,14 +28,19 @@ devEUI = ubinascii.hexlify(lora.mac()).upper().decode('utf-8')
 i = 0
 while True:
     i = i+1
+    if i == 8:
+        print('Node going to sleep')
+        machine.deepsleep(1000)
     if s.recv(64) == b'':
-        print('No message found')
+        print('No message recieved')
     else:
         if devEUI == '70B3D54991C35D8D':
             print(s.recv(64))
+            i = 0
         else:
             # check if data exists and then timeout closing the connection.
             print('Forwarded message successfully')
+            i = 0
     # if s.recv(64) == b'Ping':
     #     s.send('Pong')
     #     print('Pong {}'.format(i))

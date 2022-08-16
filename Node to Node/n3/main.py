@@ -16,6 +16,8 @@ from SI7006A20 import SI7006A20 # Temperature sensor
 py = Pysense()
 si = SI7006A20(py)
 
+start_time = time.time()
+
 # Please pick the region that matches where you are using the device
 
 lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
@@ -29,11 +31,13 @@ i = 0
 sendMessage = True
 while sendMessage:
     print('Sent message successfully')
-    s.send('Hi from ' + devEUI + '. Humidity is '+ humidity);
+    #s.send('Hi from ' + devEUI + '. Humidity is '+ humidity);
+    s.send('Humidity is ' + humidity);
 
     if s.recv(64) == b'Message Recieved':
         print('Message Recieved')
         s.send('Acknowledged')
+        print("--- %s seconds ---" % (time.time() - start_time))
         sendMessage = False
 
     # if s.recv(64) == b'Ping':
