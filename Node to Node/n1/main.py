@@ -19,6 +19,14 @@ si = SI7006A20(py)
 
 start_time = time.time()
 
+#(time awake * current awake + time sleeping * current sleeping) / (time awake + time sleeping)
+time_awake = time.time() - start_time
+current_awake = time.time()
+time_sleeping = 10
+current_sleeping = 10
+
+power_consumption = (time_awake * current_awake + time_sleeping * current_sleeping) / (time_awake + time_sleeping)
+
 # Please pick the region that matches where you are using the device
 
 temp = str(si.temperature())
@@ -46,6 +54,7 @@ while sendMessage:
 
         if s.recv(64) == b'Acknowledged':
             print("--- %s seconds ---" % (time.time() - start_time))
+            print("%s uA" % power_consumption)
             sendMessage = False
 
     else:

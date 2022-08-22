@@ -29,7 +29,17 @@ i = 0
 while True:
     i = i+1
     if i == 8:
+
+        start_time = time.time()
+        time_awake = time.time() - start_time
+        current_awake = time.time()
+        time_sleeping = 10
+        current_sleeping = 10
+
+        power_consumption = (time_awake * current_awake + time_sleeping * current_sleeping) / (time_awake + time_sleeping)
+
         print('Node going to sleep')
+        print("%s uA" % power_consumption)
         machine.deepsleep(1000)
     if s.recv(64) == b'':
         print('No message recieved')

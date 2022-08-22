@@ -18,6 +18,13 @@ si = SI7006A20(py)
 
 start_time = time.time()
 
+time_awake = time.time() - start_time
+current_awake = time.time()
+time_sleeping = 10
+current_sleeping = 10
+
+power_consumption = (time_awake * current_awake + time_sleeping * current_sleeping) / (time_awake + time_sleeping)
+
 # Please pick the region that matches where you are using the device
 
 lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
@@ -38,6 +45,7 @@ while sendMessage:
         print('Message Recieved')
         s.send('Acknowledged')
         print("--- %s seconds ---" % (time.time() - start_time))
+        print("%s uA" % power_consumption)
         sendMessage = False
 
     # if s.recv(64) == b'Ping':
