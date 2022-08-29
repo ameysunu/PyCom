@@ -30,21 +30,26 @@ power_consumption = (time_awake * current_awake + time_sleeping * current_sleepi
 # Please pick the region that matches where you are using the device
 
 temp = str(si.temperature())
-lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
+lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868, sf=7)
 
 s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setblocking(False)
 i = 0
 nvs_obj = Nvs(',', 512) # Initialize the buffer to write to LoPy's flash
 
-
 devEUI = ubinascii.hexlify(lora.mac()).upper().decode('utf-8')
 sendMessage = True
+
+# SNCF  --> attach the device EUI while sending the message. if device EUI exists in the list then do not send the data to the device EUI.
+
+deviceList = []
 
 while sendMessage:
     # s.send('Hi this is Node 1. My temperature is ' + temp)
     # nvs_obj.store(s.recv(64).decode('utf-8'))
     buf = nvs_obj.read_all()
+    deviceList.append(devEUI);
+    print(deviceList)
 
     if devEUI == '70B3D54991C35D8D':
         print(s.recv(64))

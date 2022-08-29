@@ -18,7 +18,7 @@ si = SI7006A20(py)
 
 # Please pick the region that matches where you are using the device
 
-lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
+lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868, sf=7)
 humidity = str(si.humidity())
 
 # destination id: 70B3D54997DB6CCE, source id: 70B3D54995ABD672
@@ -26,6 +26,11 @@ s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 s.setblocking(False)
 devEUI = ubinascii.hexlify(lora.mac()).upper().decode('utf-8')
 i = 0
+
+# SNCF  --> attach the device EUI while sending the message. if device EUI exists in the list then do not send the data to the device EUI.
+
+deviceList = []
+
 while True:
     i = i+1
     if i == 8:
@@ -41,6 +46,7 @@ while True:
         print('Node going to sleep')
         print("%s uA" % power_consumption)
         machine.deepsleep(1000)
+
     if s.recv(64) == b'':
         print('No message recieved')
     else:
@@ -50,6 +56,9 @@ while True:
         else:
             # check if data exists and then timeout closing the connection.
             print('Forwarded message successfully')
+            deviceList.append(devEUI);
+
+
             i = 0
     # if s.recv(64) == b'Ping':
     #     s.send('Pong')
